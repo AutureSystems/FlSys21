@@ -2,9 +2,9 @@ import discord
 from discord.ext import commands
 import json
 import time
-from replit import db
 import asyncio
 import aiosqlite
+from colorama import Fore
 from keep_alive import keep_alive
 import aioschedule as schedule
 import os
@@ -16,8 +16,40 @@ client = commands.Bot(
 
 @client.event
 async def on_ready():
-  #db = await aiosqlite.connect("main.sqlite")
-  print("Started")
+  db = await aiosqlite.connect("main.sqlite")
+  cursor = await db.cursor()
+  cursor.execute(
+	  """
+	  CREATE TABLE IF NOT EXISTS flights(
+		  channel_id TEXT,
+		  guild_id TEXT,
+		  flnumber TEXT,
+		  departure TEXT,
+		  destination TEXT,
+		  arrival TEXT,
+		  aircraft TEXT,
+		  server TEXT,
+		  gate TEXT,
+		  time TEXT,
+		  pilot,
+		  fa,
+		  fo,
+		  gc,
+
+	  )
+	  """
+  )
+  for filename in os.listdir('./extensions'):
+        if filename.endswith('.py'):
+            client.load_extension(f'extensions.{filename[:-3]}')
+            print(f'loading {filename}')
+  print(Fore.GREEN + "[STATUS] Bot started")
+  time.sleep(0.9)
+  print(Fore.GREEN + "[STATUS] Aiosqlite database loaded")
+  time.sleep(0.9)
+  print(Fore.YELLOW + "[WARNING] If you encounter a problem please terminate the process")
+  time.sleep(5)
+  print(Fore.RESET + "[DONE] Bot succesfully executed")
 
 
 async def schedtest():
@@ -29,12 +61,22 @@ async def schedtest():
 
 
 async def flight():
-  channel = client.get_channel(796775343653519370)
-  flnumber = db["flnumber"]
-  dptr = db["dpt"]
-  arrvl = db["dest"]
-  fltime = db["fltime"]
-  aircraft = db["arc"]
+  db = await aiosqlite.connect("main.sqlite")
+  for i in client.guilds:
+	  ccursor = await db.execute(f"SELECT channel_id FROM flights WHERE guild_id = {i.id}")
+	  ncursor = await db.execute(f"SELECT flnumber FROM flights WHERE guild_id = {i.id}")
+	  dcursor = await db.execute(f"SELECT departure FROM flights WHERE guild_id = {i.id}")
+	  acursor = await db.execute(f"SELECT destination FROM flights WHERE guild_id = {i.id}")
+	  flighttime = await db.execute(f"SELECT time FROM flights WHERE guild_id = {i.id}")
+	  aircrafttype = await db.execute(f"SELECT aircraft FROM flights WHERE guild_id = {i.id}")
+	  chan = await ccursor.fetchone()
+	  flnumber = await ncursor.fetchone()
+	  dptr = await dcursor.fetchone()
+	  arrvl = await acursor.fetchone()
+	  fltime = await flighttime.fetchone()
+	  aircraft = await aircrafttype.fetchone()
+
+  channel = client.get_channel(int(chan[0]))
   flight = discord.Embed(
   title=
   f"<:BA1:761894114484420609><:BA2:761894114785755176><:BA3:761894115087482930> British Airways Flight {flnumber}",
@@ -52,24 +94,32 @@ async def flight():
 @client.command()
 @commands.has_permissions(manage_messages=True)
 async def boarding(ctx):
-	value = db["serverlink"]
-	gate = db["gate"]
-	airport = db["dpt"]
-	flnumber = db["flnumber"]
-	pilot = db["pilot"]
-	f_o = db["fo"]
-	boarding = discord.Embed(
+   db = await aiosqlite.connect("main.sqlite")
+   for i in client.guilds:
+	  	value = await db.execute(f"SELECT server FROM flights WHERE guild_id = {i.id}")
+	  	gate = await db.execute(f"SELECT gate FROM flights WHERE guild_id = {i.id}")
+	  	dep = await db.execute(f"SELECT departure FROM flights WHERE guild_id = {i.id}")
+	  	fo = await db.execute(f"SELECT fo FROM flights WHERE guild_id = {i.id}")
+	  	pilots = await db.execute(f"SELECT pilot FROM flights WHERE guild_id = {i.id}")
+	  	flightnumb = await db.execute(f"SELECT flnumber FROM flights WHERE guild_id = {i.id}")
+	  	gate = await gate.fetchone()
+	  	flnumber = await flightnumb.fetchone()
+	  	airport = await dep.fetchone()
+	  	pilot = await pilots.fetchone()
+	  	f_o = await fo.fetchone()
+	  	server = await value.fetchone()
+   boarding = discord.Embed(
 	    title=
 	    f"<:BA1:761894114484420609><:BA2:761894114785755176><:BA3:761894115087482930> British Airways Flight {flnumber}",
 	    description=
 	    f"Flight {flnumber} is now boarding at:\n \n- Airport: {airport} \n- Gate: {gate} \n-------------------\n {value} \n-------------------\nPlease join VC for a better experience, \nthere's no need for a mic!\n-------------------\n- todays pilot: {pilot}\n- todays first officer: {f_o}",
 	    colour=0xff0000)
-	boarding.set_footer(text="To fly, to serve!")
-	boarding.set_thumbnail(
+   boarding.set_footer(text="To fly, to serve!")
+   boarding.set_thumbnail(
 	    url=
 	    "http://logok.org/wp-content/uploads/2014/04/British-Airways-logo-ribbon-logo-880x660.png"
 	)
-	await ctx.send(f"<@&717681307483635722>", embed=boarding)
+   await ctx.send(f"<@&717681307483635722>", embed=boarding)
 
 
 def qdel(number):
