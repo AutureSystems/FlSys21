@@ -51,15 +51,6 @@ async def on_ready():
   time.sleep(5)
   print(Fore.RESET + "[DONE] Bot succesfully executed")
 
-
-async def schedtest():
-	channel = client.get_channel("796776197962465280")
-	await channel.send("Schedule Test Part 1")
-	time.sleep(5)
-	await channel.send("Schedule Test Part 2")
-	time.sleep(5)
-
-
 async def flight():
   db = await aiosqlite.connect("main.sqlite")
   for i in client.guilds:
@@ -510,9 +501,9 @@ async def getDB(ctx, key):
 	await ctx.send(msg)
 
 
-schedule.every(5).seconds.do(schedtest)
+#schedule.every(5).seconds.do(schedtest)
 
-loop = asyncio.get_event_loop()
+#loop = asyncio.get_event_loop()
 #while True:
 	#loop.run_until_complete(schedule.run_pending())
 	#time.sleep(0.1)
