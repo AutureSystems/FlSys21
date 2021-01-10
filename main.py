@@ -487,7 +487,12 @@ async def FlSys21(ctx):
   c = 0
   #flight announcement
   await flight()
-  await ctx.send("Assigned crew succesfully")
+
+
+async def OpenGate()
+  #OpenGate function for scheduling.
+  await boarding()
+
 
 @client.command()
 @commands.has_permissions(administrator=True)
