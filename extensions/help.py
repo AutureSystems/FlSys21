@@ -2,14 +2,11 @@ import discord
 from discord.ext import commands
 
 
-#under construcion
-
-
 class help(commands.Cog):
     def __init__(self, client):
         self.client = client
 
-    @commands.command
+    @commands.command()
     async def help(self, ctx, page: int= 1):
         items_per_page = 10
         p_q = len(player.queue) + 1
