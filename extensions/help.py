@@ -14,9 +14,10 @@ class help(commands.Cog):
         pages = math.ceil(p_q / items_per_page)
         start = (page - 1) * items_per_page
         end = start + items_per_page
+        c = [i.name for i in self.client.commands]
 
         desc = ''
-        for index, cmd in enumerate(self.client.commands[start:end], start=start):
+        for index, cmd in enumerate(c[start:end], start=start):
             desc += f'fl!{cmd}\n'
         em = discord.Embed(title="Commands", description=f'{desc}', footer=f'Viewing page {page}/{pages}')
         await ctx.send(embed=em)
