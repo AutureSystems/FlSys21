@@ -19,7 +19,8 @@ class help(commands.Cog):
         desc = ''
         for index, cmd in enumerate(c[start:end], start=start):
             desc += f'fl!{cmd}\n'
-        em = discord.Embed(title="Commands", description=f'{desc}', footer=f'Viewing page {page}/{pages}')
+        em = discord.Embed(title="Commands", description=f'{desc}', color=0xfff)
+        em.set_footer=f'Viewing page {page}/{pages}'
         await ctx.send(embed=em)
 
 
