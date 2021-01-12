@@ -20,7 +20,7 @@ class help(commands.Cog):
         desc = ''
         for index, cmd in enumerate(self.client.commands[start:end], start=start):
             desc += f'fl!{cmd}\n'
-        em = discord.Embed(title:"Commands", description=desc)
+        em = discord.Embed(title="Commands", description=desc)
         await ctx.send(embed=em)
 
 
