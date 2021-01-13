@@ -51,6 +51,51 @@ async def on_ready():
   time.sleep(5)
   print(Fore.RESET + "[DONE] Bot succesfully executed")
 
+@client.event
+async def on_command_error(ctx, error):
+	if isinstance(error, commands.CommandNotFound):
+		emv = "I Dont know that command!"
+	elif isinstance(error, commands.CommandOnCooldown):
+		emv = "You are on cooldown, try again in {} seconds".format(error.retry_after)
+	elif isinstance(error, commands.MessageNotFound):
+		emv = "I can't find {} message!".format(error.argument)
+	elif isinstance(error, commands.MemberNotFound) or isinstance(error, commands.UserNotFound):
+		emv = "I can't find {} user!".format(error.argument)
+	elif isinstance(error, commands.ChannelNotFound):
+		emv = "I can't find {} channel!".format(error.argument)
+	elif isinstance(error, commands.ChannelNotReadable):
+		emv = "I don't have permission to read message in {} channel!".format(error.argument)
+	elif isinstance(error, commands.RoleNotFound):
+		emv = "I can't find {} role!".format(error.argument)
+	elif isinstance(error, commands.DisabledCommand):
+		emv = "That command is disabled!"
+	elif isinstance(error, commands.NoPrivateMessage):
+		emv = "You can't run this command on private message or DM!"
+	elif isinstance(error, commands.PrivateMessageOnly):
+		emv = "You can only run in private message or DM!"
+	elif isinstance(error, commands.MissingRequiredArgument):
+		emv = "Im missing {} parameter to run this command properly".format(error.param)
+	elif isinstance(error, commands.NotOwner):
+		emv = "Sorry but this command is for owner only!"
+	elif isinstance(error, commands.EmojiNotFound):
+		emv = "I can't find {} emoji!".format(error.argument)
+	elif isinstance(error, commands.MissingPermissions):
+		emv = "You missing {} permission to run that command!".format(error.missing_perms)
+	elif isinstance(error, commands.BotMissingPermissions):
+		emv = "Im missing {} permission to execute that command!".format(error.missing_perms)
+	elif isinstance(error, commands.MissingRole):
+		emv = "You missing {} role to run this command!".format(error.missing_role)
+	elif isinstance(error, commands.BotMissingRole):
+		emv = "Im need {} role to run this command!".format(error.missing_role)
+	elif isinstance(error, commands.MissingAnyRole):
+		emv = "You missing {} roles to run this command!".format(error.missing_roles)
+	elif isinstance(error, commands.BotMissingAnyRole):
+		emv = "Im need {} role to run this command!".format(error.missing_roles)
+	else:
+		emv = f"An unexpected error has occured! The error:\n{error}"
+	em = discord.Embed(titlle="An error has occured!", description=emv)
+	await ctx.send(embed=em)
+
 async def flight():
   db = await aiosqlite.connect("main.sqlite")
   for i in client.guilds:
@@ -480,7 +525,7 @@ async def FlSys21(ctx):
   await flight()
 
 
-async def OpenGate()
+async def OpenGate():
   #OpenGate function for scheduling.
   await boarding()
 
