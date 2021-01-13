@@ -83,10 +83,14 @@ async def on_command_error(ctx, error):
 		emv = "You missing {} permission to run that command!".format(error.missing_perms)
 	elif isinstance(error, commands.BotMissingPermissions):
 		emv = "Im missing {} permission to execute that command!".format(error.missing_perms)
-	elif isinstance(error, commands.MissingRole) or isinstance(error, commands.MissingAnyRole):
+	elif isinstance(error, commands.MissingRole):
 		emv = "You missing {} role to run this command!".format(error.missing_role)
-	elif isinstance(error, commands.BotMissingRole) or isinstance(error, commands.BotMissingAnyRole):
+	elif isinstance(error, commands.BotMissingRole):
 		emv = "Im need {} role to run this command!".format(error.missing_role)
+	elif isinstance(error, commands.MissingAnyRole):
+		emv = "You missing {} roles to run this command!".format(error.missing_roles)
+	elif isinstance(error, commands.BotMissingAnyRole):
+		emv = "Im need {} role to run this command!".format(error.missing_roles)
 	else:
 		emv = f"An unexpected error has occured! The error:\n{error}"
 	em = discord.Embed(titlle="An error has occured!", description=emv)
