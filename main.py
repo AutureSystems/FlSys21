@@ -100,7 +100,7 @@ async def on_command_error(ctx, error):
 	else:
 		emv = f"An unexpected error has occured! The error:\n{error}"
 	em = discord.Embed(titlle="An error has occured!", description=emv)
-	em.set_footer("Is this a bug? Let us know!")
+	em.set_footer(text="Is this a bug? Let us know!")
 	await ctx.send(embed=em)
 
 async def flight():
