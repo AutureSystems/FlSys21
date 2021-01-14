@@ -8,6 +8,7 @@ from colorama import Fore
 from keep_alive import keep_alive
 import aioschedule as schedule
 import os
+import difflib
 
 intents = discord.Intents.default()
 client = commands.Bot(
@@ -55,6 +56,11 @@ async def on_ready():
 async def on_command_error(ctx, error):
 	if isinstance(error, commands.CommandNotFound):
 		emv = "I Dont know that command!"
+		cmd = ctx.message.content.split()[0].replace(client.command_prefix, "")
+		all_cmd = [i.name for i in client.commands]
+		pos = difflib.get_close_matches(cmd, all_cmd, n=1)
+		if pos:
+			emv += f"\nMaybe you mean {client.command_prefix}{pos[0]}?"
 	elif isinstance(error, commands.CommandOnCooldown):
 		emv = "You are on cooldown, try again in {} seconds".format(error.retry_after)
 	elif isinstance(error, commands.MessageNotFound):
