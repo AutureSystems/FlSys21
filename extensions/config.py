@@ -1,13 +1,53 @@
 import discord
 import aiosqlite
 from discord.ext import commands
+import json
 
 color = 0x131581
+client = commands
 
 class config(commands.Cog):
   def __init__(self, client):
     self.client = client
 
+  @commands.command()
+  @commands.has_permissions(administrator=True)
+  async def setup(self, ctx):
+    with open('servers.json', 'r') as f:
+        servers = json.load(f)
+    for current_server in servers['servers']:
+        if current_server['server_ID'] == ctx.guild.id:
+            await ctx.send("This server is already setup! Use fl!help to get info on how to change individual things.")
+            break
+    else:
+        qlist = [
+        "What is your flight announcements channel ID?",
+        "What is your timezone?",
+        
+    ]
+
+        alist = []
+
+        channel = ctx.channel
+
+        def check(m):
+            return m.content is not None and m.channel == channel and not m.author.bot
+
+        for q in qlist:
+            await ctx.send(q)
+            msg = await self.client.wait_for('message', check=check)
+            alist.append(msg.content)
+        
+        servers['servers'].append({
+            "server_ID": ctx.guild.id,
+            "channel_ID": int(alist[0]),
+            "timezone": alist[1],
+            "fleet": [],
+        })
+        await ctx.send(f"Setup done! Review your servers configuration using fl!serverconfig.")
+    with open('servers.json', 'w') as f:
+        json.dump(servers, f, indent=4)
+    
 
   @commands.command()
   @commands.has_permissions(manage_channels=True)
