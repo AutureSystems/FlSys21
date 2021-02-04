@@ -2,6 +2,7 @@ import discord
 import aiosqlite
 from discord.ext import commands
 import json
+import time
 
 color = 0x131581
 client = commands
@@ -44,10 +45,36 @@ class config(commands.Cog):
             "timezone": alist[1],
             "fleet": [],
         })
-        await ctx.send(f"Setup done! Review your servers configuration using fl!serverconfig.")
+        await ctx.send(f"Initial setup done! Review your servers configuration using fl!serverconfig. Next up please use fl!fleet to enter your fleet.")
     with open('servers.json', 'w') as f:
         json.dump(servers, f, indent=4)
-    
+
+  @commands.command()
+  @commands.has_permissions(administrator=True)
+  async def fleet(self, ctx):
+    def check(m):
+        return m.content is not None and not m.author.bot and m.author == ctx.author
+    with open('servers.json', 'r') as f:
+        servers = json.load(f)
+    for current_server in servers['servers']:
+      if current_server['server_ID'] == ctx.guild.id:
+        fleetsetup = discord.Embed(title="Fleet Setup", description="Welcome to the fleet setup! Please enter your fleet *one by one* and only when you're asked to do as it won't be used correctly otherwise. We will now start with your fleet setup.")
+        await ctx.send(embed=fleetsetup)
+        submit_wait = True
+        fleetlist = []
+        while submit_wait:
+          await ctx.send("Enter a plane or type 'done' to submit your fleet!")
+          msg = await self.client.wait_for('message', check=check)
+          fleetlist.append(msg.content)
+          time.sleep(0.5)
+          if "done" in msg.content.lower():
+            submit_wait = False
+            current_server["fleet"] = fleetlist
+            with open('servers.json', 'w') as f:
+              json.dump(servers, f, indent=4)
+            await ctx.send("Fleet submitted! Congratulations!")
+
+  
 
   @commands.command()
   @commands.has_permissions(manage_channels=True)

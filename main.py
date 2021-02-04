@@ -23,13 +23,13 @@ async def on_ready():
         if filename.endswith('.py'):
             client.load_extension(f'extensions.{filename[:-3]}')
             print(f'loading {filename}')
-  print(Fore.GREEN + "[STATUS] Bot started")
+  print(Fore.YELLOW + "[STATUS] Bot started")
   time.sleep(0.9)
-  print(Fore.GREEN + "[STATUS] Aiosqlite database loaded")
+  print(Fore.GREEN + "[STATUS] json database loaded")
   time.sleep(0.9)
-  print(Fore.YELLOW + "[WARNING] If you encounter a problem please terminate the process")
-  time.sleep(5)
-  print(Fore.RESET + "[DONE] Bot succesfully executed")
+  print(Fore.RED + "[WARNING] If you encounter a problem please terminate the process")
+  time.sleep(2)
+  print(Fore.GREEN + "[DONE] Bot succesfully executed")
 
 @client.event
 async def on_command_error(ctx, error):
@@ -83,34 +83,28 @@ async def on_command_error(ctx, error):
 	await ctx.send(embed=em)
 
 async def flight():
-  db = await aiosqlite.connect("main.sqlite")
-  for i in client.guilds:
-	  ccursor = await db.execute(f"SELECT channel_id FROM flights WHERE guild_id = {i.id}")
-	  ncursor = await db.execute(f"SELECT flnumber FROM flights WHERE guild_id = {i.id}")
-	  dcursor = await db.execute(f"SELECT departure FROM flights WHERE guild_id = {i.id}")
-	  acursor = await db.execute(f"SELECT destination FROM flights WHERE guild_id = {i.id}")
-	  flighttime = await db.execute(f"SELECT time FROM flights WHERE guild_id = {i.id}")
-	  aircrafttype = await db.execute(f"SELECT aircraft FROM flights WHERE guild_id = {i.id}")
-	  chan = await ccursor.fetchone()
-	  flnumber = await ncursor.fetchone()
-	  dptr = await dcursor.fetchone()
-	  arrvl = await acursor.fetchone()
-	  fltime = await flighttime.fetchone()
-	  aircraft = await aircrafttype.fetchone()
+	with open('servers.json', 'r') as f:
+        servers = json.load(f)
+	for current_server in servers["servers"]:
+        if current_server["server_ID"] == ctx.guild.id:
+			channel = current_server["channel_ID"]
+			flnumber = current_server["flnumber"]
+			dptr = current_server["departure"]
+			arrvl = current_server["destination"]
+			aircraft = current_server["aircraft"]
+			fltime = current_server["fltime"]
+	flight = discord.Embed(
+	title=
+	f"<:BA1:761894114484420609><:BA2:761894114785755176><:BA3:761894115087482930> British Airways Flight {flnumber}",
+	description=
+	f"Departure Airport: {dptr} \nDestination Airport: {arrvl} \n\nTodays Aircraft: {aircraft} \nTime Of Flight Is {fltime} \nTimezone is GMT \n\nFirst Class: <:FirstClass:757170500454580224>\nBusiness Class: <:BusinessClass:757171994121732157>\nEconomy Class: <:GreatBritain:714843928431558676>\n\n Listing of passengers ends **30 minutes before flight**!\n-------------\n",
+	colour=0xff0000)
+	flight.set_footer(text=f"To fly, to serve!")
+	msg = await channel.send(f"<@&717681307483635722>", embed=flight)
 
-  channel = client.get_channel(int(chan[0]))
-  flight = discord.Embed(
-  title=
-  f"<:BA1:761894114484420609><:BA2:761894114785755176><:BA3:761894115087482930> British Airways Flight {flnumber}",
-  description=
-  f"Departure Airport: {dptr} \nDestination Airport: {arrvl} \n\nTodays Aircraft: {aircraft} \nTime Of Flight Is {fltime} \nTimezone is GMT \n\nFirst Class: <:FirstClass:757170500454580224>\nBusiness Class: <:BusinessClass:757171994121732157>\nEconomy Class: <:GreatBritain:714843928431558676>\n\n Listing of passengers ends **30 minutes before flight**!\n-------------\n",
-  colour=0xff0000)
-  flight.set_footer(text=f"To fly, to serve!")
-  msg = await channel.send(f"<@&717681307483635722>", embed=flight)
-
-  await msg.add_reaction(emoji="<:FirstClass:757170500454580224>")
-  await msg.add_reaction(emoji="<:BusinessClass:757171994121732157>")
-  await msg.add_reaction(emoji="<:GreatBritain:714843928431558676>")
+	await msg.add_reaction(emoji="<:FirstClass:757170500454580224>")
+	await msg.add_reaction(emoji="<:BusinessClass:757171994121732157>")
+	await msg.add_reaction(emoji="<:GreatBritain:714843928431558676>")
 
 
 @client.command()
