@@ -17,3 +17,8 @@ Current Development Status:
 - public testing/demonstration
 
 Currently in development, more info to be added in later development stages.
+
+# To-Do List
+-add schedule commands
+-make default announcement embeds
+-add option to add a slogan in fl!setup

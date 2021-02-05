@@ -24,6 +24,7 @@ class config(commands.Cog):
         qlist = [
         "What is your flight announcements channel ID?",
         "What is your timezone?",
+        "Please give me the link to your VIP server"
         
     ]
 
@@ -41,8 +42,10 @@ class config(commands.Cog):
         
         servers['servers'].append({
             "server_ID": ctx.guild.id,
+            "server_icon": ctx.guild.icon_url,
             "channel_ID": int(alist[0]),
             "timezone": alist[1],
+            "serverlink": alist[2],
             "fleet": [],
         })
         await ctx.send(f"Initial setup done! Review your servers configuration using fl!serverconfig. Next up please use fl!fleet to enter your fleet.")

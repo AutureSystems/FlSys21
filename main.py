@@ -87,7 +87,7 @@ async def flight():
         servers = json.load(f)
 	for current_server in servers["servers"]:
         if current_server["server_ID"] == ctx.guild.id:
-			channel = current_server["channel_ID"]
+			channel = client.get_channel(current_server["channel_ID"])
 			flnumber = current_server["flnumber"]
 			dptr = current_server["departure"]
 			arrvl = current_server["destination"]
@@ -95,7 +95,7 @@ async def flight():
 			fltime = current_server["fltime"]
 	flight = discord.Embed(
 	title=
-	f"<:BA1:761894114484420609><:BA2:761894114785755176><:BA3:761894115087482930> British Airways Flight {flnumber}",
+	f"Flight {flnumber}",
 	description=
 	f"Departure Airport: {dptr} \nDestination Airport: {arrvl} \n\nTodays Aircraft: {aircraft} \nTime Of Flight Is {fltime} \nTimezone is GMT \n\nFirst Class: <:FirstClass:757170500454580224>\nBusiness Class: <:BusinessClass:757171994121732157>\nEconomy Class: <:GreatBritain:714843928431558676>\n\n Listing of passengers ends **30 minutes before flight**!\n-------------\n",
 	colour=0xff0000)
@@ -107,35 +107,31 @@ async def flight():
 	await msg.add_reaction(emoji="<:GreatBritain:714843928431558676>")
 
 
-@client.command()
-@commands.has_permissions(manage_messages=True)
 async def boarding(ctx):
-   db = await aiosqlite.connect("main.sqlite")
-   for i in client.guilds:
-	  	value = await db.execute(f"SELECT server FROM flights WHERE guild_id = {i.id}")
-	  	gate = await db.execute(f"SELECT gate FROM flights WHERE guild_id = {i.id}")
-	  	dep = await db.execute(f"SELECT departure FROM flights WHERE guild_id = {i.id}")
-	  	fo = await db.execute(f"SELECT fo FROM flights WHERE guild_id = {i.id}")
-	  	pilots = await db.execute(f"SELECT pilot FROM flights WHERE guild_id = {i.id}")
-	  	flightnumb = await db.execute(f"SELECT flnumber FROM flights WHERE guild_id = {i.id}")
-	  	gate = await gate.fetchone()
-	  	flnumber = await flightnumb.fetchone()
-	  	airport = await dep.fetchone()
-	  	pilot = await pilots.fetchone()
-	  	f_o = await fo.fetchone()
-	  	server = await value.fetchone()
-   boarding = discord.Embed(
+	with open('servers.json', 'r') as f:
+        servers = json.load(f)
+	for current_server in servers["servers"]:
+        if current_server["server_ID"] == ctx.guild.id:
+			channel = client.get_channel(current_server["channel_ID"])
+			flnumber = current_server["flnumber"]
+			airport = current_server["departure"]
+			gate = current_server["gate"]
+			serverlink = current_server["serverlink"]
+			server = current_server
+	for current_server in servers["servers"]:
+        if current_server["server_ID"] == server
+	
+   	boarding = discord.Embed(
 	    title=
-	    f"<:BA1:761894114484420609><:BA2:761894114785755176><:BA3:761894115087482930> British Airways Flight {flnumber}",
+	    f"Flight {flnumber}",
 	    description=
-	    f"Flight {flnumber} is now boarding at:\n \n- Airport: {airport} \n- Gate: {gate} \n-------------------\n {value} \n-------------------\nPlease join VC for a better experience, \nthere's no need for a mic!\n-------------------\n- todays pilot: {pilot}\n- todays first officer: {f_o}",
+	    f"Flight {flnumber} is now boarding at:\n \n- Airport: {airport} \n- Gate: {gate} \n-------------------\n {serverlink} \n-------------------\nPlease join VC for a better experience, \nthere's no need for a mic!\n-------------------\n- todays pilot: {pilot}\n- todays first officer: {f_o}",
 	    colour=0xff0000)
-   boarding.set_footer(text="To fly, to serve!")
-   boarding.set_thumbnail(
-	    url=
-	    "http://logok.org/wp-content/uploads/2014/04/British-Airways-logo-ribbon-logo-880x660.png"
+	boarding.set_footer(text="To fly, to serve!")
+   	boarding.set_thumbnail(
+	    url= current_server["server_icon"]
 	)
-   await ctx.send(f"<@&717681307483635722>", embed=boarding)
+   	await channel.send(f"<@&717681307483635722>", embed=boarding)
 
 
 
