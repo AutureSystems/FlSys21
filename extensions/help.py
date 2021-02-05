@@ -25,7 +25,7 @@ class help(commands.Cog):
                     em.description = f"No command with name {command} found"
         else:
             em.description = "Commands"
-            for i in self.client.commmands:
+            for i in self.client.commands:
                 if i.brief is None:
                     brief = "No short description provided"
                 else:
