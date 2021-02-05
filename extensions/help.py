@@ -8,7 +8,7 @@ class help(commands.Cog):
         self.client = client
 
     @commands.command()
-    async def help(self, ctx, *, cog):
+    async def help(self, ctx, *, cog=None):
         em = discord.Embed(title="Bot help")
         if cog is not None:
             try:
