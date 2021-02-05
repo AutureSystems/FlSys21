@@ -102,6 +102,7 @@ async def on_command_error(ctx, error):
 	em = discord.Embed(titlle="An error has occured!", description=emv)
 	em.set_footer(text="Is this a bug? Let us know!")
 	await ctx.send(embed=em)
+	raise error
 
 async def flight():
   db = await aiosqlite.connect("main.sqlite")
