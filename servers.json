@@ -1,0 +1,34 @@
+{
+    "servers": [
+        {
+            "server_ID": 1,
+            "channel_ID": 1,
+            "timezone": 1,
+            "fleet": [],
+            "flight": {
+                "flnumber": 1,
+                "deptarture": 1,
+                "destination": 1,
+                "aircraft": 1,
+                "serverlink": 1,
+                "gate": 1,
+                "fltime": 1,
+                "pilot": 1,
+                "fo": 1,
+                "fa": 1,
+                "gc": 1
+            }
+        },
+        {
+            "server_ID": 796762088517009498,
+            "channel_ID": 796775343653519370,
+            "timezone": "GMT",
+            "fleet": [
+                "yes boomba",
+                "your mom",
+                "your sis",
+                "done"
+            ]
+        }
+    ]
+}
