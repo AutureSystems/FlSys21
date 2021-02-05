@@ -8,23 +8,29 @@ class help(commands.Cog):
         self.client = client
 
     @commands.command()
-    async def help(self, ctx, page: int= 1):
-        items_per_page = 10
-        p_q = len(self.client.commands) + 1
-        pages = math.ceil(p_q / items_per_page)
-        start = (page - 1) * items_per_page
-        end = start + items_per_page
-        c = [i for i in self.client.commands]
-
-        desc = ''
-        for index, cmd in enumerate(c[start:end], start=start):
-            if cmd.description is None:
-                desc = "No Description provided"
-            else:
-                desc = cmd.description
-            desc += f'**fl!{cmd.name}**\n{desc}\n' 
-        em = discord.Embed(title="Commands", description=f'{desc}', color=16515071)
-        em.set_footer(text=f'Viewing page {page}/{pages}')
+    async def help(self, ctx, *, command=None):
+        em = discord.Embed(tilte="Bot Help")
+        if command is not None:
+            for i in self.client.commands:
+                if i == command:
+                    em.description = f"{self.client.command_prefix}{i}"
+                    if i.description is None:
+                        desc = "No Description provided :<"
+                    else:
+                        desc = i.description
+                    em.add_field(name="usage", value =f"{self.client.command_prefix}{i}{i.usage}")
+                    em.add_field(name="description", value=desc)
+                    break
+                else:
+                    em.description = f"No command with name {command} found"
+        else:
+            em.description = "Commands"
+            for i in self.client.commands:
+                if i.brief is None:
+                    brief = "No short description provided"
+                else:
+                    brief = i.brief
+                em.add_field(name=f"{self.client.command_prefix}{i}", value=brief)
         await ctx.send(embed=em)
 
 
