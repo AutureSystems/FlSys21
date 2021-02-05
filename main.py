@@ -84,9 +84,9 @@ async def on_command_error(ctx, error):
 
 async def flight():
 	with open('servers.json', 'r') as f:
-        servers = json.load(f)
+		servers = json.load(f)
 	for current_server in servers["servers"]:
-        if current_server["server_ID"] == ctx.guild.id:
+		if current_server["server_ID"] == ctx.guild.id:
 			channel = client.get_channel(current_server["channel_ID"])
 			flnumber = current_server["flnumber"]
 			dptr = current_server["departure"]
@@ -109,9 +109,9 @@ async def flight():
 
 async def boarding(ctx):
 	with open('servers.json', 'r') as f:
-        servers = json.load(f)
+		servers = json.load(f)
 	for current_server in servers["servers"]:
-        if current_server["server_ID"] == ctx.guild.id:
+		if current_server["server_ID"] == ctx.guild.id:
 			channel = client.get_channel(current_server["channel_ID"])
 			flnumber = current_server["flnumber"]
 			airport = current_server["departure"]
@@ -119,19 +119,19 @@ async def boarding(ctx):
 			serverlink = current_server["serverlink"]
 			server = current_server
 	for current_server in servers["servers"]:
-        if current_server["server_ID"] == server
+		if current_server["server_ID"] == server:
 	
-   	boarding = discord.Embed(
-	    title=
-	    f"Flight {flnumber}",
-	    description=
-	    f"Flight {flnumber} is now boarding at:\n \n- Airport: {airport} \n- Gate: {gate} \n-------------------\n {serverlink} \n-------------------\nPlease join VC for a better experience, \nthere's no need for a mic!\n-------------------\n- todays pilot: {pilot}\n- todays first officer: {f_o}",
-	    colour=0xff0000)
-	boarding.set_footer(text="To fly, to serve!")
-   	boarding.set_thumbnail(
-	    url= current_server["server_icon"]
-	)
-   	await channel.send(f"<@&717681307483635722>", embed=boarding)
+			boarding = discord.Embed(
+				title=
+				f"Flight {flnumber}",
+				description=
+				f"Flight {flnumber} is now boarding at:\n \n- Airport: {airport} \n- Gate: {gate} \n-------------------\n {serverlink} \n-------------------\nPlease join VC for a better experience, \nthere's no need for a mic!\n-------------------\n- todays pilot: {pilot}\n- todays first officer: {f_o}",
+				colour=0xff0000)
+			boarding.set_footer(text="To fly, to serve!")
+			boarding.set_thumbnail(
+				url= current_server["server_icon"]
+			)
+			await channel.send(f"<@&717681307483635722>", embed=boarding)
 
 
 

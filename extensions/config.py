@@ -25,6 +25,7 @@ class config(commands.Cog):
         "What is your flight announcements channel ID?",
         "What is your timezone?",
         "Please give me the link to your VIP server"
+        "Would you like me to randomly pick an airport?"
         
     ]
 
@@ -46,6 +47,7 @@ class config(commands.Cog):
             "channel_ID": int(alist[0]),
             "timezone": alist[1],
             "serverlink": alist[2],
+            "pickAirports": alist[3],
             "fleet": [],
         })
         await ctx.send(f"Initial setup done! Review your servers configuration using fl!serverconfig. Next up please use fl!fleet to enter your fleet.")
