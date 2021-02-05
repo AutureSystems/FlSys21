@@ -41,7 +41,7 @@ class help(commands.Cog):
                 else:
                     desc = cogm.description
                 em.add_field(name=cogm.qualified_name, value=desc, inline = False)
-                em.description = "Categories:"
+            em.description = "Categories:"
         em.set_footer(text="() means optional and {} means required")
         await ctx.send(embed=em)
 
