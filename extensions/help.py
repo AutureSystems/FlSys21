@@ -9,23 +9,41 @@ class help(commands.Cog):
 
     @commands.command()
     async def help(self, ctx, page: int= 1):
-        items_per_page = 10
-        p_q = len(self.client.commands) + 1
-        pages = math.ceil(p_q / items_per_page)
-        start = (page - 1) * items_per_page
-        end = start + items_per_page
-        c = [i for i in self.client.commands]
-
-        desc = ''
-        for index, cmd in enumerate(c[start:end], start=start):
-            if cmd.description is None:
+    em = discord.Embed(title="Bot help")
+    if cog is not None:
+        try:
+            cogi = self.client.get_cog(str(cog).lower())
+            cmds = cogi.get_commands()
+            for cmd in cmds:
+                if cmd.description is None:
+                    desc = "No Description provided"
+                else:
+                    desc = cmd.description
+                em.add_field(name=cmd, value=desc, inline = True)
+        except:
+            tlist = []
+            for i in self.client.commands:
+                tlist.append(i)
+            for b in tlist:
+                if b.name == cog:
+                    if b.description is None:
+                        desc = "No Description provided"
+                    else:
+                        desc = b.description
+                    em.add_field(name=b.name, value=f"{desc}\nUsage:\n{self.client.command_prefix}{b.name} {b.usage}")
+                    break
+                em.description = f"No command or category named {cog} found"
+    else:
+        for cogp in self.client.cogs:
+            cogm = self.client.get_cog(cogp)
+            if cogm.description is None:
                 desc = "No Description provided"
             else:
-                desc = cmd.description
-            desc += f'**fl!{cmd.name}**\n{desc}\n' 
-        em = discord.Embed(title="Commands", description=f'{desc}', color=16515071)
-        em.set_footer(text=f'Viewing page {page}/{pages}')
-        await ctx.send(embed=em)
+                desc = cogm.description
+            em.add_field(name=cogm.qualified_name, value=desc, inline = False)
+            em.description = "Categories:"
+        em.set_footer(text="() means optional and {} means required")
+    await ctx.send(embed=em)
 
 
 def setup(client):
