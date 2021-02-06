@@ -12,13 +12,17 @@ class help(commands.Cog):
         em = discord.Embed(tilte="Bot Help")
         if command is not None:
             for i in self.client.commands:
-                if i == command:
+                if i.name == command:
                     em.description = f"{self.client.command_prefix}{i}"
                     if i.description is None:
                         desc = "No Description provided :<"
                     else:
                         desc = i.description
-                    em.add_field(name="usage", value =f"{self.client.command_prefix}{i}{i.usage}")
+                    if i.usage is None:
+                        usage = ""
+                    else:
+                        usage = i.usage
+                    em.add_field(name="usage", value =f"{self.client.command_prefix}{i}{usage}")
                     em.add_field(name="description", value=desc)
                     break
                 else:
