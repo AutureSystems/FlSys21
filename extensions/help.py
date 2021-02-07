@@ -22,7 +22,7 @@ class help(commands.Cog):
                         usage = ""
                     else:
                         usage = i.usage
-                    em.add_field(name="usage", value =f"{self.client.command_prefix}{i}{usage}")
+                    em.add_field(name="usage", value = usage)
                     em.add_field(name="description", value=desc)
                     break
                 else:
