@@ -18,8 +18,11 @@ Current Development Status:
 
 Currently in development, more info to be added in later development stages.
 
-# To-Do List
+# To-Do List before Alpha
 -add schedule commands
 -make default announcement embeds
 -add option to add a slogan in fl!setup
 -add confirmation/information system for autonomous flight hosting
+-rework the queues to support multi-server usage
+-add roles to ping
+-remove "done" when entering fleet"
