@@ -29,7 +29,8 @@ async def on_ready():
   time.sleep(0.9)
   print(Fore.RED + "[WARNING] If you encounter a problem please terminate the process")
   time.sleep(2)
-  print(Fore.GREEN + "[DONE] Bot succesfully executed")
+  print(Fore.RESET + "[DONE] Bot succesfully executed")
+  await client.change_presence(activity=discord.Game('pre-alpha V0.1'))
 
 @client.event
 async def on_command_error(ctx, error):
@@ -119,6 +120,8 @@ async def boarding(ctx):
 			gate = current_server["gate"]
 			serverlink = current_server["serverlink"]
 			server = current_server
+			pilot = server[pilot] # replace!!!
+			f_o = server[pilot] # replace!!!
 	for current_server in servers["servers"]:
 		if current_server["server_ID"] == server:
 	

@@ -23,3 +23,4 @@ Currently in development, more info to be added in later development stages.
 -make default announcement embeds
 -add option to add a slogan in fl!setup
 -add confirmation/information system for autonomous flight hosting
+-rework the queues to support multi-server usage
