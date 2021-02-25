@@ -17,8 +17,6 @@ client = commands.Bot(
 
 @client.event
 async def on_ready():
-  db = await aiosqlite.connect("main.sqlite")
-  cursor = await db.cursor()
   for filename in os.listdir('./extensions'):
         if filename.endswith('.py'):
             client.load_extension(f'extensions.{filename[:-3]}')
@@ -34,6 +32,7 @@ async def on_ready():
 
 @client.event
 async def on_command_error(ctx, error):
+	devchannel = client.get_channel(807979906720858112)
 	if isinstance(error, commands.CommandNotFound):
 		emv = "I Dont know that command!"
 		cmd = ctx.message.content.split()[0].replace(client.command_prefix, "")
@@ -82,6 +81,7 @@ async def on_command_error(ctx, error):
 	em = discord.Embed(titlle="An error has occured!", description=emv)
 	em.set_footer(text="Is this a bug? Let us know!")
 	await ctx.send(embed=em)
+	await devchannel.send(embed=em)
 	raise error
 
 async def flight():

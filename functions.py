@@ -119,3 +119,21 @@ async def testrun(ctx):
 		    f"{role} couldn't be assigned as there were no more queue entries")
 	await ctx.send(
 	    "Test run sucessful! Actions completed: \n- defined first in the queue\n- checked FIP as pilot\n- if he confirmed: deleted the queue entry.")
+
+#flight data
+#pilot selection
+#pilot assignemnt
+  while db["qc"] == "false":
+    with open('pilotqueues.json', 'r') as f:
+      servers = json.load(f)
+      users = entry["users"]
+      topuser = users[c]
+      c = c + 1
+      host = await client.fetch_user(topuser["ID"])
+    await check(ctx, host, role="pilot")
+  time.sleep(1)
+  if db["qc"] == "true":
+    number = c - 1
+    pqdel(number)
+  db["qc"] = "false"
+  c = 0
